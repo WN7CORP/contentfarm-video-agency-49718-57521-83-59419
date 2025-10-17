@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Modern Vade Mecum Elite palette */
+    --background: 210 40% 5%;
+    --foreground: 210 20% 98%;
+
+    --card: 215 28% 10%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 215 28% 10%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 170 100% 42%;
+    --primary-foreground: 210 40% 5%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 170 100% 42%;
+    --accent-foreground: 210 40% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 170 100% 42%;
+
+    --radius: 1rem;
+
+    /* Vade Mecum specific colors */
+    --constitution: 170 100% 42%;
+    --codes: 217 91% 60%;
+    --statutes: 239 84% 67%;
+    --summaries: 174 72% 56%;
+    
+    /* Academic environment gradients */
+    --gradient-purple-start: 260 80% 60%;
+    --gradient-purple-end: 240 90% 55%;
+    --gradient-red-start: 0 75% 55%;
+    --gradient-red-end: 340 80% 50%;
+    --gradient-green-start: 160 70% 45%;
+    --gradient-green-end: 150 75% 40%;
+    --gradient-pink-start: 320 75% 55%;
+    --gradient-pink-end: 280 80% 60%;
+
+    --article-highlight: 0 75% 62%;
+    
+    /* Audio progress colors */
+    --audio-progress: 0 75% 62%;
+    --audio-wave: 0 75% 60%;
+
+    /* Assistant specific colors */
+    --assistant-study: 210 90% 55%;
+    --assistant-realcase: 160 70% 45%;
+    --assistant-psychologist: 280 75% 60%;
+    --assistant-tcc: 30 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Markdown styles for chat */
+  .prose {
+    @apply text-foreground;
+  }
+  
+  .prose p {
+    @apply text-foreground leading-relaxed;
+  }
+  
+  .prose strong {
+    @apply text-accent font-bold;
+  }
+  
+  strong {
+    @apply text-foreground font-bold;
+  }
+  
+  /* Article specific styles */
+  .article-content {
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+  
+  .article-content strong {
+    @apply text-accent font-bold;
+  }
+  
+  .article-content .uppercase-highlight {
+    @apply text-accent font-bold;
+  }
+  
+  /* Neutralize font-size classes within article content to allow parent control */
+  .article-content .text-sm,
+  .article-content .text-base {
+    font-size: inherit !important;
+  }
+  
+  .prose code {
+    @apply bg-secondary/50 px-1.5 py-0.5 rounded text-sm;
+  }
+  
+  .prose pre {
+    @apply bg-secondary/50 rounded-lg p-3 overflow-x-auto;
+  }
+  
+  .prose ul, .prose ol {
+    @apply my-2 pl-5;
+  }
+  
+  .prose li {
+    @apply my-1;
+  }
+  
+  .prose a {
+    @apply text-accent hover:underline;
+  }
+  
+  .prose h1 {
+    @apply text-foreground font-bold text-3xl;
+  }
+  
+  .prose h2 {
+    @apply text-foreground font-bold text-2xl;
+  }
+  
+  .prose h3 {
+    @apply text-foreground font-bold text-xl;
+  }
+  
+  .prose h4, .prose h5, .prose h6 {
+    @apply text-foreground font-bold text-lg;
+  }
+
+  /* Ocultar scrollbars mantendo funcionalidade de rolagem */
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+
+  html, body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE e Edge */
+    overflow: auto;
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
