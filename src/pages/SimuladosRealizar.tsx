@@ -46,6 +46,8 @@ const SimuladosRealizar = () => {
   const [marcadas, setMarcadas] = useState<Set<number>>(new Set());
   const [showFinalizarDialog, setShowFinalizarDialog] = useState(false);
   const [tempoDecorrido, setTempoDecorrido] = useState(0);
+  const [respostasConfirmadas, setRespostasConfirmadas] = useState<{ [key: number]: boolean }>({});
+  const [mostrarComentario, setMostrarComentario] = useState<{ [key: number]: boolean }>({});
 
   // Timer
   useEffect(() => {
@@ -97,13 +99,19 @@ const SimuladosRealizar = () => {
   });
 
   const handleResposta = (alternativa: string) => {
-    if (!questoes || modoResposta === "final") return;
+    if (!questoes) return;
     setRespostas({ ...respostas, [currentIndex]: alternativa });
   };
 
-  const handleRespostaFinal = (alternativa: string) => {
-    if (!questoes || modoResposta !== "final") return;
-    setRespostas({ ...respostas, [currentIndex]: alternativa });
+  const confirmarResposta = () => {
+    setRespostasConfirmadas({ ...respostasConfirmadas, [currentIndex]: true });
+  };
+
+  const toggleComentario = () => {
+    setMostrarComentario({ 
+      ...mostrarComentario, 
+      [currentIndex]: !mostrarComentario[currentIndex] 
+    });
   };
 
   const handleMarcar = () => {
@@ -234,8 +242,8 @@ const SimuladosRealizar = () => {
       </div>
 
       {/* Questão */}
-      <div className="px-3 py-6 max-w-4xl mx-auto">
-        <Card className="p-6 mb-6">
+      <div className="px-3 py-6 max-w-4xl mx-auto w-full">
+        <Card className="p-4 md:p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="px-3 py-1 bg-accent/20 text-accent text-xs font-semibold rounded-full">
               {questaoAtual.area}
@@ -258,7 +266,7 @@ const SimuladosRealizar = () => {
             </Button>
           </div>
 
-          <p className="text-base leading-relaxed mb-6 font-medium">
+          <p className="text-sm md:text-base leading-relaxed mb-6 font-medium break-words">
             {questaoAtual.enunciado}
           </p>
 
@@ -266,26 +274,23 @@ const SimuladosRealizar = () => {
             {alternativas.map((alt) => {
               const isSelected = respostas[currentIndex] === alt.letra;
               const isCorrect = alt.letra === questaoAtual.resposta;
-              const showFeedback = modoResposta === "imediato" && isSelected;
+              const isConfirmed = respostasConfirmadas[currentIndex];
+              const showFeedback = modoResposta === "imediato" && isConfirmed && isSelected;
               
               return (
                 <button
                   key={alt.letra}
-                  onClick={() => 
-                    modoResposta === "imediato" 
-                      ? handleResposta(alt.letra) 
-                      : handleRespostaFinal(alt.letra)
-                  }
-                  disabled={modoResposta === "imediato" && respostas[currentIndex] !== undefined}
+                  onClick={() => handleResposta(alt.letra)}
+                  disabled={modoResposta === "imediato" && isConfirmed}
                   className={cn(
-                    "w-full text-left p-4 rounded-lg border-2 transition-all",
+                    "w-full text-left p-3 md:p-4 rounded-lg border-2 transition-all",
                     "hover:border-accent hover:bg-accent/5 disabled:cursor-not-allowed",
                     isSelected && !showFeedback && "border-accent bg-accent/10",
                     showFeedback && isCorrect && "border-green-500 bg-green-500/10",
                     showFeedback && !isCorrect && "border-destructive bg-destructive/10"
                   )}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 md:gap-3">
                     <span className="font-bold text-muted-foreground shrink-0 flex items-center gap-2">
                       {alt.letra}.
                       {showFeedback && isCorrect && (
@@ -295,7 +300,7 @@ const SimuladosRealizar = () => {
                         <XCircle className="w-5 h-5 text-destructive" />
                       )}
                     </span>
-                    <span className={cn(isSelected && "font-medium")}>
+                    <span className={cn("text-sm md:text-base break-words", isSelected && "font-medium")}>
                       {alt.texto}
                     </span>
                   </div>
@@ -304,24 +309,64 @@ const SimuladosRealizar = () => {
             })}
           </div>
 
-          {/* Comentário quando modo imediato */}
-          {modoResposta === "imediato" && respostas[currentIndex] && (
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border">
-              <h4 className="font-semibold mb-2 text-sm">
-                {respostas[currentIndex] === questaoAtual.resposta 
-                  ? "✅ Resposta Correta!" 
-                  : `❌ Resposta Incorreta. Correta: ${questaoAtual.resposta}`
-                }
-              </h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {questaoAtual.comentario}
-              </p>
+          {/* Botão Responder - Modo Imediato */}
+          {modoResposta === "imediato" && respostas[currentIndex] && !respostasConfirmadas[currentIndex] && (
+            <div className="mt-4">
+              <Button 
+                onClick={confirmarResposta}
+                className="w-full"
+              >
+                Responder
+              </Button>
             </div>
+          )}
+
+          {/* Feedback e Botão Ver Comentário - Modo Imediato */}
+          {modoResposta === "imediato" && respostasConfirmadas[currentIndex] && (
+            <>
+              <div className="mt-4 p-3 md:p-4 bg-muted/50 rounded-lg border border-border">
+                <h4 className="font-semibold mb-2 text-sm md:text-base flex items-center gap-2">
+                  {respostas[currentIndex] === questaoAtual.resposta ? (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                      <span className="text-green-500">Resposta Correta!</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-5 h-5 text-destructive" />
+                      <span className="text-destructive">
+                        Resposta Incorreta. Correta: {questaoAtual.resposta}
+                      </span>
+                    </>
+                  )}
+                </h4>
+              </div>
+
+              {questaoAtual.comentario && (
+                <div className="mt-3">
+                  <Button 
+                    variant="outline"
+                    onClick={toggleComentario}
+                    className="w-full"
+                  >
+                    {mostrarComentario[currentIndex] ? "Ocultar Comentário" : "Ver Comentário"}
+                  </Button>
+                  
+                  {mostrarComentario[currentIndex] && (
+                    <div className="mt-3 p-3 md:p-4 bg-muted/50 rounded-lg border border-border">
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed break-words">
+                        {questaoAtual.comentario}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </Card>
 
         {/* Navegação */}
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button
             variant="outline"
             onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}

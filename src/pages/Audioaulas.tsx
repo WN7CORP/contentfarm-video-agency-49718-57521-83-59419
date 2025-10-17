@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Headphones, Music, Radio, Disc3, Podcast } from "lucide-react";
+import { Headphones } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AudioAula } from "@/types/database.types";
-
-const areaIcons = [Headphones, Music, Radio, Disc3, Podcast];
 
 const Audioaulas = () => {
   const navigate = useNavigate();
@@ -61,7 +59,6 @@ const Audioaulas = () => {
 
       <div className="grid grid-cols-2 gap-3">
         {areas?.map((item: any, index: number) => {
-          const Icon = areaIcons[index % areaIcons.length];
           const gradientColors = [
             { from: "from-purple-600", to: "to-purple-800", glow: "rgb(147, 51, 234)" },
             { from: "from-blue-600", to: "to-blue-800", glow: "rgb(37, 99, 235)" },
@@ -88,7 +85,7 @@ const Audioaulas = () => {
               
               <CardContent className="p-5 flex flex-col items-center text-center min-h-[180px] justify-center">
                 <div className={`flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br ${colors.from} ${colors.to} transition-transform group-hover:scale-110 mb-3 shadow-lg`}>
-                  <Icon className="w-7 h-7 text-white" />
+                  <Headphones className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="font-bold text-base mb-2 text-white line-clamp-2">
                   {item.area}

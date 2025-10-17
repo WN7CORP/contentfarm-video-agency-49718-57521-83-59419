@@ -114,7 +114,7 @@ const SpotifyLikePlayer = ({
 
   return (
     <>
-      <div className={`fixed inset-0 z-50 bg-gradient-to-br from-gray-900/98 to-gray-800/98 backdrop-blur-lg transition-all duration-300 ${
+      <div className={`fixed inset-0 z-50 bg-gradient-to-br from-gray-900 to-gray-800 transition-all duration-300 ${
         isOpen ? "translate-y-0" : "translate-y-full"
       } overflow-y-auto`}>
         <audio

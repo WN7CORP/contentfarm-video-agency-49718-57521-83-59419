@@ -98,10 +98,10 @@ const AudioaulasTema = () => {
                         {audio.tag}
                       </Badge>}
                   </div>
-                  <h3 className="font-semibold text-base mb-1 line-clamp-1">
+                  <h3 className="font-semibold text-base mb-1">
                     {audio.titulo}
                   </h3>
-                  {audio.tema && <p className="text-sm text-muted-foreground line-clamp-1">
+                  {audio.tema && <p className="text-sm text-muted-foreground">
                       {audio.tema}
                     </p>}
                 </div>
